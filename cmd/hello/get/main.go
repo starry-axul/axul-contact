@@ -14,7 +14,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if sourceIP == "" {
 		greeting = "Hello, world!\n"
 	} else {
-		greeting = fmt.Sprintf("Hello, %s!\n", sourceIP)
+		greeting = fmt.Sprintf("Hello get, %s!\n", sourceIP)
 	}
 
 	return events.APIGatewayProxyResponse{
