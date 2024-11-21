@@ -2,12 +2,16 @@
 
 build:
 	@echo "=> Building service"
-	dir=hello/get make build-file
-	dir=hello/create make build-file
+	dir=contacts/get make build-file
+	dir=contacts/create make build-file
+	dir=contacts/update make build-file
+	dir=contacts/getall make build-file
+	dir=contacts/delete make build-file
+	dir=contacts/alert make build-file
 	sam build
 
 local:
-	sam local start-api
+	sam local start-api --skip-pull-image --warm-containers EAGER --profile costamagna-terraform
 
 build-file:
 	env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/$(dir)/bootstrap		cmd/$(dir)/main.go

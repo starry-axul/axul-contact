@@ -1,4 +1,4 @@
 .PHONY: build
 
-build-HelloWorldFunction:
+build-ContactsGetAllFunction:
 	cp ./bootstrap $(ARTIFACTS_DIR)/bootstrap
