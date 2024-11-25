@@ -3,7 +3,7 @@ package contact
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/ncostamagna/go-logger-hub/loghub"
 	authentication "github.com/ncostamagna/axul_auth/auth"
 	"github.com/ncostamagna/axul_domain/domain"
 	"github.com/starry-axul/notifit-go-sdk/notify"
@@ -28,7 +28,7 @@ type service struct {
 	repo      Repository
 	notif     notify.Transport
 	auth      authentication.Auth
-	logger    log.Logger
+	logger    loghub.Logger
 }
 
 type Filter struct {
@@ -41,12 +41,12 @@ type Filter struct {
 }
 
 // NewService is a service handler
-func NewService(repo Repository, notif notify.Transport, auth authentication.Auth, logger *log.Logger) Service {
+func NewService(repo Repository, notif notify.Transport, auth authentication.Auth, logger loghub.Logger) Service {
 	return &service{
 		repo:      repo,
 		auth:      auth,
 		notif:     notif,
-		logger:    *logger,
+		logger:    logger,
 	}
 }
 

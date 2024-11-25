@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"log"
+	"github.com/ncostamagna/go-logger-hub/loghub"
 	"github.com/ncostamagna/axul_domain/domain"
 	"gorm.io/gorm"
 )
@@ -24,11 +24,11 @@ type Repository interface {
 
 type repo struct {
 	db  *gorm.DB
-	log *log.Logger
+	log loghub.Logger
 }
 
 // NewRepo is a repositories handler
-func NewRepo(db *gorm.DB, logger *log.Logger) Repository {
+func NewRepo(db *gorm.DB, logger loghub.Logger) Repository {
 	return &repo{
 		db:  db,
 		log: logger,

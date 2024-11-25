@@ -24,6 +24,8 @@ github.com/ncostamagna/axul_domain v0.0.6 h1:EjV2AX5mpcoiddDQ4l3Tv6pE26WQbY7ZIVo
 github.com/ncostamagna/axul_domain v0.0.6/go.mod h1:IbHm2VphdPLCCuxmZEgXPCFB0Z06wXI7JfuDex3wpmM=
 github.com/ncostamagna/go-http-utils v0.0.5 h1:gAAXvZrVCq7cAwUBHeKIvbL5n0WD6VFgs6LEc9LLXiM=
 github.com/ncostamagna/go-http-utils v0.0.5/go.mod h1:Z4K2K6AKrjSp8LAnDfi/HMfsfK1+fMQ6mxeBK9Kgmxw=
+github.com/ncostamagna/go-logger-hub v0.0.3 h1:6R/Ykhi2BrlVMr34gxKu9Y3HRzB1ioNs2odOfaxSKps=
+github.com/ncostamagna/go-logger-hub v0.0.3/go.mod h1:QaFU/n2rOKVhCdk26PWgj+uUocD/IUNh0PuynaRky4E=
 github.com/ncostamagna/go_http_client v0.0.1 h1:Nd2OGLo7KNvTRjA7OjMRdJCsIq1yBHgP9VSnwPhQbnY=
 github.com/ncostamagna/go_http_client v0.0.1/go.mod h1:6gp1XfbSK4l6LBfJYmRTTDFFMGLae59hdxzrNh3+/jQ=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

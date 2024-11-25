@@ -3,12 +3,19 @@ package bootstrap
 import (
 	"fmt"
 	"github.com/ncostamagna/axul_domain/domain"
+	"github.com/ncostamagna/go-logger-hub/loghub"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
 )
 
-func DBConnection() (*gorm.DB, error) {
+func SetupLogger() loghub.Logger {
+	return loghub.New(
+		loghub.NewNativeLogger(nil, loghub.FormatStringToNumber(os.Getenv("NATIVE_LOGGER_TRACE"))),
+	)
+}
+
+func DBConnection() *gorm.DB {
 	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		os.Getenv("DATABASE_USER"),
 		os.Getenv("DATABASE_PASSWORD"),
@@ -18,7 +25,7 @@ func DBConnection() (*gorm.DB, error) {
 	fmt.Println("connect: ", dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	if os.Getenv("DATABASE_DEBUG") == "true" {
@@ -27,9 +34,9 @@ func DBConnection() (*gorm.DB, error) {
 
 	if os.Getenv("DATABASE_MIGRATE") == "true" {
 		if err := db.AutoMigrate(domain.Contact{}); err != nil {
-			return nil, err
+			panic(err)
 		}
 	}
 
-	return db, nil
+	return db
 }

@@ -8,6 +8,7 @@ require (
 	github.com/ncostamagna/axul_auth v1.2.0
 	github.com/ncostamagna/axul_domain v0.0.6
 	github.com/ncostamagna/go-http-utils v0.0.5
+	github.com/ncostamagna/go-logger-hub v0.0.3
 	github.com/starry-axul/notifit-go-sdk v0.0.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
