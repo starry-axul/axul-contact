@@ -15,6 +15,16 @@ Globals:
     # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
     LoggingConfig:
       LogFormat: JSON
+    Environment:
+      Variables:
+        NATIVE_LOGGER_TRACE: 15
+        DATABASE_USER: "dunny"
+        DATABASE_PASSWORD: "dunny"
+        DATABASE_HOST: "dunny"
+        DATABASE_PORT: "dunny"
+        DATABASE_NAME: "dunny"
+        DATABASE_MIGRATE: "false"
+        STAGE: dev
   Api:
     TracingEnabled: true
 Resources:
@@ -32,10 +42,6 @@ Resources:
           Properties:
             Path: /contacts/{id}
             Method: GET
-      Environment:
-        # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
   ContactsCreateFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -50,10 +56,6 @@ Resources:
           Properties:
             Path: /contacts
             Method: POST
-      Environment:
-        # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
   ContactsDeleteFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:

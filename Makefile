@@ -11,7 +11,7 @@ build:
 	sam build
 
 local:
-	sam local start-api --skip-pull-image --warm-containers EAGER --profile costamagna-terraform
+	sam local start-api --skip-pull-image --warm-containers EAGER --profile costamagna-terraform --env-vars env.json --docker-network appnet
 
 build-file:
 	env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/$(dir)/bootstrap		cmd/$(dir)/main.go

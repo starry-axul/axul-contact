@@ -1,4 +1,4 @@
 .aws-sam
 .idea
 bin/**/bootstrap
-.env
+env.json
