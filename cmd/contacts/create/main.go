@@ -1,28 +1,26 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/starry-axul/axul-contact/internal/contact"
+	"github.com/starry-axul/axul-contact/pkg/bootstrap"
+	"github.com/starry-axul/axul-contact/pkg/handler"
+	"github.com/go-kit/kit/transport/awslambda"
+	"gorm.io/gorm"
 )
 
-func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var greeting string
-	sourceIP := request.RequestContext.Identity.SourceIP
+var db *gorm.DB
+var h *awslambda.Handler
 
-	if sourceIP == "" {
-		greeting = "Hello create, world!\n"
-	} else {
-		greeting = fmt.Sprintf("Hello create, %s!\n", sourceIP)
-	}
+func init() {
+	logger := bootstrap.SetupLogger()
+	db = bootstrap.DBConnection()
 
-	return events.APIGatewayProxyResponse{
-		Body:       greeting,
-		StatusCode: 200,
-	}, nil
+	repo := contact.NewRepo(db, logger)
+	service := contact.NewService(repo, nil, nil, logger)
+	h = handler.NewStoreHandler(contact.MakeEndpoints(service))
 }
 
 func main() {
-	lambda.Start(handler)
+	lambda.StartHandler(h)
 }

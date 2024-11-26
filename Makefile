@@ -11,6 +11,7 @@ build:
 	sam build
 
 local:
+	make build
 	sam local start-api --skip-pull-image --warm-containers EAGER --profile costamagna-terraform --env-vars env.json --docker-network appnet
 
 build-file:
