@@ -38,7 +38,7 @@ func NewRepo(db *gorm.DB, logger loghub.Logger) Repository {
 func (repo *repo) Create(_ context.Context, contact *domain.Contact) error {
 
 	if err := repo.db.Create(&contact).Error; err != nil {
-		//_ = repo.log.Println(err)
+		repo.log.Error(err)
 		return err
 	}
 
@@ -74,11 +74,11 @@ func (repo *repo) GetAll(ctx context.Context, f Filter, offset, limit int) ([]do
 	})
 
 	if result.Error != nil {
-		//repo.log.CatchError(result.Error)
+		repo.log.Error(result.Error)
 		return nil, result.Error
 	}
 
-	//_ = repo.log.CatchMessage(fmt.Sprintf("Row: %d", result.RowsAffected))
+	repo.log.Info(fmt.Sprintf("Row: %d", result.RowsAffected))
 
 	return cs, nil
 }
@@ -87,6 +87,7 @@ func (repo *repo) Get(_ context.Context, id string) (*domain.Contact, error) {
 	contact := domain.Contact{}
 
 	if err := repo.db.Where("id = ?", id).First(&contact).Error; err != nil {
+		repo.log.Error(err)
 		return nil, err
 	}
 	return &contact, nil
@@ -122,12 +123,11 @@ func (repo *repo) Update(ctx context.Context, id string, firstName, lastName, ni
 
 	result := repo.db.WithContext(ctx).Model(&domain.Contact{}).Where("id = ?", id).Updates(values)
 	if result.Error != nil {
-		//return repo.log.CatchError(result.Error)
+		repo.log.Error(result.Error)
 		return result.Error
 	}
 
 	if result.RowsAffected == 0 {
-		//repo.log.CatchError(ErrNotFound{fmt.Sprint(id)})
 		return ErrNotFound{fmt.Sprint(id)}
 	}
 
@@ -139,7 +139,7 @@ func (r *repo) Delete(ctx context.Context, id string) error {
 	result := r.db.WithContext(ctx).Delete(&course)
 
 	if result.Error != nil {
-		//return r.log.CatchError(result.Error)
+		r.log.Error(result.Error)
 		return result.Error
 	}
 
@@ -154,7 +154,7 @@ func (repo *repo) Count(ctx context.Context, filters Filter) (int, error) {
 	tx := repo.db.WithContext(ctx).Model(domain.Contact{})
 	tx = applyFilters(tx, filters)
 	if err := tx.Count(&count).Error; err != nil {
-		fmt.Println(err)
+		repo.log.Error(err)
 		return 0, err
 	}
 
