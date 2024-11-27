@@ -8,6 +8,7 @@ import (
 	"github.com/ncostamagna/go-http-utils/response"
 	"strconv"
 	"time"
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 const (
@@ -91,6 +92,9 @@ func MakeEndpoints(s Service) Endpoints {
 
 func makeCreateEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		ctx, seg := xray.BeginSegment(ctx, "contact-create")
+		defer seg.Close(nil)
+
 		req := request.(StoreReq)
 
 		if req.Firstname == "" {
@@ -153,7 +157,6 @@ func makeGetAllEndpoint(s Service) Controller {
 		}
 
 		count, err := s.Count(ctx, f)
-		fmt.Println(count)
 		if err != nil {
 			return nil, response.InternalServerError(err.Error())
 		}
@@ -174,6 +177,9 @@ func makeGetAllEndpoint(s Service) Controller {
 
 func makeUpdateEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
+
+		ctx, seg := xray.BeginSegment(ctx, "contact-update")
+		defer seg.Close(nil)
 
 		req := request.(UpdateReq)
 		var birthday *time.Time
@@ -211,6 +217,10 @@ func makeUpdateEndpoint(s Service) Controller {
 
 func makeGetEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
+
+		ctx, seg := xray.BeginSegment(ctx, "contact-get")
+		defer seg.Close(nil)
+
 		req := request.(GetReq)
 
 		contact, err := s.Get(ctx, req.ID)
@@ -224,6 +234,9 @@ func makeGetEndpoint(s Service) Controller {
 
 func makeDeleteEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
+
+		ctx, seg := xray.BeginSegment(ctx, "contact-delete")
+		defer seg.Close(nil)
 
 		req := request.(DeleteReq)
 
@@ -241,6 +254,9 @@ func makeDeleteEndpoint(s Service) Controller {
 
 func makeAlertEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		ctx, seg := xray.BeginSegment(ctx, "contact-alert")
+		defer seg.Close(nil)
+
 		req := request.(AlertReq)
 
 		cs, err := s.Alert(ctx, req.Birthday)

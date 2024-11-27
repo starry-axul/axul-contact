@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 	"os"
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 // Service interface
@@ -62,46 +63,52 @@ func (s service) Create(ctx context.Context, firstName, lastName, nickName, gend
 		Birthday:  birthday,
 	}
 
+	ctx, subSeg := xray.BeginSubsegment(ctx, "store")
 	if err := s.repo.Create(ctx, &c); err != nil {
 		return nil, err
 	}
-
+	subSeg.Close(nil)
 	return &c, nil
 }
 
 func (s service) Update(ctx context.Context, id string, firstName, lastName, nickName, gender, phone *string, birthday *time.Time) error {
+	ctx, subSeg := xray.BeginSubsegment(ctx, "update")
+	defer subSeg.Close(nil)
 	return s.repo.Update(ctx, id, firstName, lastName, nickName, gender, phone, birthday)
 }
 
 func (s service) Delete(ctx context.Context, id string) error {
-
+	ctx, subSeg := xray.BeginSubsegment(ctx, "delete")
 	if err := s.repo.Delete(ctx, id); err != nil {
 		return err
 	}
-
+	subSeg.Close(nil)
 	return nil
 }
 
 func (s service) Get(ctx context.Context, id string) (*domain.Contact, error) {
+	ctx, subSeg := xray.BeginSubsegment(ctx, "get")
 	c, err := s.repo.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-
+	subSeg.Close(nil)
 	return c, nil
 }
 
 func (s service) GetAll(ctx context.Context, f Filter, offset, limit int) ([]domain.Contact, error) {
-
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-getall")
 	cs, err := s.repo.GetAll(ctx, f, offset, limit)
 	if err != nil {
 		return nil, err
 	}
-
+	subSeg.Close(nil)
 	return cs, nil
 }
 
 func (s service) Alert(ctx context.Context, birthday string) ([]domain.Contact, error) {
+	ctx, subSeg := xray.BeginSubsegment(ctx, "alert")
+	defer subSeg.Close(nil)
 
 	days, err := strconv.Atoi(birthday)
 	if err != nil {

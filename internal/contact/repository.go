@@ -50,7 +50,7 @@ func (repo *repo) GetAll(ctx context.Context, f Filter, offset, limit int) ([]do
 	var tx *gorm.DB
 	var cs []domain.Contact
 
-	tx = repo.db.Model(&cs)
+	tx = repo.db.WithContext(ctx).Model(&cs)
 	tx = applyFilters(tx, f)
 	tx = tx.Limit(limit).Offset(offset)
 	result := tx.Find(&cs)

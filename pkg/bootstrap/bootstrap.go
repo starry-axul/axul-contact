@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
+	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 func SetupLogger() loghub.Logger {
@@ -22,8 +23,15 @@ func DBConnection() *gorm.DB {
 		os.Getenv("DATABASE_HOST"),
 		os.Getenv("DATABASE_PORT"),
 		os.Getenv("DATABASE_NAME"))
+
+	instrumentedDB, err := xray.SQLContext("mysql", dsn)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println("connect: ", dsn)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.New(mysql.Config{
+        Conn: instrumentedDB,
+    }), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
