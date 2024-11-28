@@ -17,9 +17,6 @@ phases:
     commands:
     - echo Building the application...
     - make build
-
-  deploy:
-    commands:
     - echo Deploying the application...
     - make deploy
 
