@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.x
+    commands:
+    - echo Installing dependencies...
+    - go mod download
+
+  pre_build:
+    commands:
+    - echo Running tests...
+    - go test ./... -v
+
+  build:
+    commands:
+    - echo Building the application...
+    - make build
+
+artifacts:
+  files:
+  - template.yaml
+  - bin/**/*
+  - .aws-sam/**/*
+  discard-paths: no
+
+cache:
+  paths:
+  - /go/pkg/mod/**/*
