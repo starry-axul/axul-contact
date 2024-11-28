@@ -18,7 +18,6 @@ confirm_changeset = true
 resolve_s3 = true
 s3_prefix = "axul-contact"
 region = "us-east-1"
-profile = "costamagna-terraform"
 image_repositories = []
 
 [default.package.parameters]
