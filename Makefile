@@ -16,3 +16,6 @@ local:
 
 build-file:
 	env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/$(dir)/bootstrap		cmd/$(dir)/main.go
+
+deploy:
+	sam deploy --no-confirm-changeset --no-confirm-credentials --no-confirm-rollback --no-confirm-changeset-approval

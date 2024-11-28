@@ -18,6 +18,11 @@ phases:
     - echo Building the application...
     - make build
 
+  deploy:
+    commands:
+    - echo Deploying the application...
+    - make deploy
+
 artifacts:
   files:
   - template.yaml
