@@ -92,9 +92,6 @@ func MakeEndpoints(s Service) Endpoints {
 
 func makeCreateEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		ctx, seg := xray.BeginSegment(ctx, "contact-create")
-		defer seg.Close(nil)
-
 		req := request.(StoreReq)
 
 		if req.Firstname == "" {
@@ -128,7 +125,6 @@ func makeCreateEndpoint(s Service) Controller {
 
 func makeGetAllEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-
 		req := request.(GetAllReq)
 
 		//if err := s.authorization(ctx, req.Auth.ID, req.Auth.Token); err != nil {
@@ -177,10 +173,6 @@ func makeGetAllEndpoint(s Service) Controller {
 
 func makeUpdateEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-
-		ctx, seg := xray.BeginSegment(ctx, "contact-update")
-		defer seg.Close(nil)
-
 		req := request.(UpdateReq)
 		var birthday *time.Time
 
@@ -217,10 +209,6 @@ func makeUpdateEndpoint(s Service) Controller {
 
 func makeGetEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-
-		ctx, seg := xray.BeginSegment(ctx, "contact-get")
-		defer seg.Close(nil)
-
 		req := request.(GetReq)
 
 		contact, err := s.Get(ctx, req.ID)
@@ -234,10 +222,6 @@ func makeGetEndpoint(s Service) Controller {
 
 func makeDeleteEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-
-		ctx, seg := xray.BeginSegment(ctx, "contact-delete")
-		defer seg.Close(nil)
-
 		req := request.(DeleteReq)
 
 		if err := s.Delete(ctx, req.ID); err != nil {
@@ -254,9 +238,6 @@ func makeDeleteEndpoint(s Service) Controller {
 
 func makeAlertEndpoint(s Service) Controller {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		ctx, seg := xray.BeginSegment(ctx, "contact-alert")
-		defer seg.Close(nil)
-
 		req := request.(AlertReq)
 
 		cs, err := s.Alert(ctx, req.Birthday)

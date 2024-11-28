@@ -35,9 +35,9 @@ func NewRepo(db *gorm.DB, logger loghub.Logger) Repository {
 	}
 }
 
-func (repo *repo) Create(_ context.Context, contact *domain.Contact) error {
+func (repo *repo) Create(ctx context.Context, contact *domain.Contact) error {
 
-	if err := repo.db.Create(&contact).Error; err != nil {
+	if err := repo.db.WithContext(ctx).Create(&contact).Error; err != nil {
 		repo.log.Error(err)
 		return err
 	}
@@ -83,10 +83,10 @@ func (repo *repo) GetAll(ctx context.Context, f Filter, offset, limit int) ([]do
 	return cs, nil
 }
 
-func (repo *repo) Get(_ context.Context, id string) (*domain.Contact, error) {
+func (repo *repo) Get(ctx context.Context, id string) (*domain.Contact, error) {
 	contact := domain.Contact{}
 
-	if err := repo.db.Where("id = ?", id).First(&contact).Error; err != nil {
+	if err := repo.db.WithContext(ctx).Where("id = ?", id).First(&contact).Error; err != nil {
 		repo.log.Error(err)
 		return nil, err
 	}
