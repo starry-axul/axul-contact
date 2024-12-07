@@ -63,7 +63,7 @@ func (s service) Create(ctx context.Context, firstName, lastName, nickName, gend
 		Birthday:  birthday,
 	}
 
-	ctx, subSeg := xray.BeginSubsegment(ctx, "store")
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-store")
 	if err := s.repo.Create(ctx, &c); err != nil {
 		return nil, err
 	}
@@ -72,13 +72,13 @@ func (s service) Create(ctx context.Context, firstName, lastName, nickName, gend
 }
 
 func (s service) Update(ctx context.Context, id string, firstName, lastName, nickName, gender, phone *string, birthday *time.Time) error {
-	ctx, subSeg := xray.BeginSubsegment(ctx, "update")
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-update")
 	defer subSeg.Close(nil)
 	return s.repo.Update(ctx, id, firstName, lastName, nickName, gender, phone, birthday)
 }
 
 func (s service) Delete(ctx context.Context, id string) error {
-	ctx, subSeg := xray.BeginSubsegment(ctx, "delete")
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-delete")
 	if err := s.repo.Delete(ctx, id); err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (s service) Delete(ctx context.Context, id string) error {
 }
 
 func (s service) Get(ctx context.Context, id string) (*domain.Contact, error) {
-	ctx, subSeg := xray.BeginSubsegment(ctx, "get")
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-get")
 	c, err := s.repo.Get(ctx, id)
 	if err != nil {
 		return nil, err
@@ -107,29 +107,28 @@ func (s service) GetAll(ctx context.Context, f Filter, offset, limit int) ([]dom
 }
 
 func (s service) Alert(ctx context.Context, birthday string) ([]domain.Contact, error) {
-	ctx, subSeg := xray.BeginSubsegment(ctx, "alert")
-	defer subSeg.Close(nil)
-
 	days, err := strconv.Atoi(birthday)
 	if err != nil {
 		days = 0
 	}
-
-	cs, err := s.repo.GetAll(ctx, Filter{Birthday: &days}, 0, 0)
+	ctxGetAll, subSeg := xray.BeginSubsegment(ctx, "database-getall")
+	cs, err := s.repo.GetAll(ctxGetAll, Filter{Birthday: &days}, 0, 30)
 	if err != nil {
 		return nil, err
 	}
+	subSeg.Close(nil)
 
+	ctxNotify, subSeg := xray.BeginSubsegment(ctx, "notification-service")
 	for _, c := range cs {
 
 		if days == 0 {
-			if err := s.notif.Push(ctx, fmt.Sprintf(os.Getenv("BIRTHDAY_TITLE"), c.Firstname, c.Lastname), fmt.Sprintf(os.Getenv("BIRTHDAY_TEXT"), c.Firstname, c.Lastname), os.Getenv("BIRTHDAY_PAGE")); err != nil {
+			if err := s.notif.Push(ctxNotify, fmt.Sprintf(os.Getenv("BIRTHDAY_TITLE"), c.Firstname, c.Lastname), fmt.Sprintf(os.Getenv("BIRTHDAY_TEXT"), c.Firstname, c.Lastname), os.Getenv("BIRTHDAY_PAGE")); err != nil {
 				s.logger.Error(err)
 				return nil, err
 			}
 		}
 	}
-
+	subSeg.Close(nil)
 	return cs, nil
 }
 
@@ -154,5 +153,7 @@ func (s *service) authorization(ctx context.Context, id, token string) error {
 }*/
 
 func (s service) Count(ctx context.Context, filters Filter) (int, error) {
+	ctx, subSeg := xray.BeginSubsegment(ctx, "database-count")
+	defer subSeg.Close(nil)
 	return s.repo.Count(ctx, filters)
 }
