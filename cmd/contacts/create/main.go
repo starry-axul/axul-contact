@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/starry-axul/axul-contact/internal/contact"
 	"github.com/starry-axul/axul-contact/pkg/bootstrap"
 	"github.com/starry-axul/axul-contact/pkg/handler"
 	"github.com/go-kit/kit/transport/awslambda"
@@ -15,10 +14,8 @@ var h *awslambda.Handler
 func init() {
 	logger := bootstrap.SetupLogger()
 	db = bootstrap.DBConnection()
-
-	repo := contact.NewRepo(db, logger)
-	service := contact.NewService(repo, nil, nil, logger)
-	h = handler.NewStoreHandler(contact.MakeEndpoints(service))
+	instance := bootstrap.ContactInstance(db, logger)
+	h = handler.NewStoreHandler(instance)
 }
 
 func main() {

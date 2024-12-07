@@ -111,18 +111,19 @@ func (s service) Alert(ctx context.Context, birthday string) ([]domain.Contact, 
 	if err != nil {
 		days = 0
 	}
-	ctx, subSeg := xray.BeginSubsegment(ctx, "database-getall")
-	cs, err := s.repo.GetAll(ctx, Filter{Birthday: &days}, 0, 0)
+	ctxGetAll, subSeg := xray.BeginSubsegment(ctx, "database-getall")
+	cs, err := s.repo.GetAll(ctxGetAll, Filter{Birthday: &days}, 0, 30)
 	if err != nil {
 		return nil, err
 	}
 	subSeg.Close(nil)
 
-	ctx, subSeg := xray.BeginSubsegment(ctx, "notification-service")
+	ctxNotify, subSeg := xray.BeginSubsegment(ctx, "notification-service")
 	for _, c := range cs {
 
+		fmt.Println(c)
 		if days == 0 {
-			if err := s.notif.Push(ctx, fmt.Sprintf(os.Getenv("BIRTHDAY_TITLE"), c.Firstname, c.Lastname), fmt.Sprintf(os.Getenv("BIRTHDAY_TEXT"), c.Firstname, c.Lastname), os.Getenv("BIRTHDAY_PAGE")); err != nil {
+			if err := s.notif.Push(ctxNotify, fmt.Sprintf(os.Getenv("BIRTHDAY_TITLE"), c.Firstname, c.Lastname), fmt.Sprintf(os.Getenv("BIRTHDAY_TEXT"), c.Firstname, c.Lastname), os.Getenv("BIRTHDAY_PAGE")); err != nil {
 				s.logger.Error(err)
 				return nil, err
 			}

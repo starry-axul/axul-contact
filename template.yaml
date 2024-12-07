@@ -22,7 +22,12 @@ Globals:
         DATABASE_PORT: "dunny"
         DATABASE_NAME: "dunny"
         DATABASE_MIGRATE: "false"
+        DATABASE_DEBUG: "false"
         STAGE: dev
+        BIRTHDAY_TITLE: "Cumpleaños de %s %s"
+        BIRTHDAY_TEXT: "Mañana es el cumpleaños de %s, recorda saludarlo"
+        NOTIFY_URL: "https://notify.axul.com.br/api/v1/push"
+        NOTIFY_TOKEN: "1234567890"
   Api:
     TracingEnabled: true
 Resources:

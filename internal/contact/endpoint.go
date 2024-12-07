@@ -8,7 +8,6 @@ import (
 	"github.com/ncostamagna/go-http-utils/response"
 	"strconv"
 	"time"
-	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 const (
