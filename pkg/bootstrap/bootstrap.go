@@ -28,7 +28,7 @@ func DBConnection() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("connect: ", dsn)
+
 	db, err := gorm.Open(mysql.New(mysql.Config{
         Conn: instrumentedDB,
     }), &gorm.Config{})

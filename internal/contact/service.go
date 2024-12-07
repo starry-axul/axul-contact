@@ -121,7 +121,6 @@ func (s service) Alert(ctx context.Context, birthday string) ([]domain.Contact, 
 	ctxNotify, subSeg := xray.BeginSubsegment(ctx, "notification-service")
 	for _, c := range cs {
 
-		fmt.Println(c)
 		if days == 0 {
 			if err := s.notif.Push(ctxNotify, fmt.Sprintf(os.Getenv("BIRTHDAY_TITLE"), c.Firstname, c.Lastname), fmt.Sprintf(os.Getenv("BIRTHDAY_TEXT"), c.Firstname, c.Lastname), os.Getenv("BIRTHDAY_PAGE")); err != nil {
 				s.logger.Error(err)

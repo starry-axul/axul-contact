@@ -56,8 +56,6 @@ func (repo *repo) GetAll(ctx context.Context, f Filter, offset, limit int) ([]do
 	result := tx.Find(&cs)
 
 	for i := range cs {
-		fmt.Println(cs[i])
-		fmt.Println(cs[i].Birthday)
 		year := f.firstDate.Year()
 		if cs[i].Birthday.Month() < f.firstDate.Month() {
 			year++
@@ -69,7 +67,6 @@ func (repo *repo) GetAll(ctx context.Context, f Filter, offset, limit int) ([]do
 
 		bd := time.Date(year, cs[i].Birthday.Month(), cs[i].Birthday.Day(), 0, 0, 0, 0, time.UTC)
 		cs[i].Days = int64(bd.Sub(f.firstDate).Hours() / 24)
-		fmt.Println(cs[i].Days)
 	}
 
 	sort.SliceStable(cs, func(i, j int) bool {
