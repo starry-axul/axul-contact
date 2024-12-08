@@ -17,14 +17,23 @@ phases:
     commands:
     - echo Building the application...
     - make build
-    - echo $DATABASE_DEBUG
-    - echo $DATABASE_MIGRATE
-    - echo $BIRTHDAY_TITLE
-    - echo $BIRTHDAY_TEXT
-    - echo $NOTIFY_URL
-    - echo $NOTIFY_TOKEN
     - echo Deploying the application...
-    - make deploy --parameter-overrides DATABASE_DEBUG=$DATABASE_DEBUG DATABASE_MIGRATE=$DATABASE_MIGRATE BIRTHDAY_TITLE=$BIRTHDAY_TITLE BIRTHDAY_TEXT=$BIRTHDAY_TEXT NOTIFY_URL=$NOTIFY_URL NOTIFY_TOKEN=$NOTIFY_TOKEN
+    - |
+      sam deploy --no-confirm-changeset \
+        --parameter-overrides \
+        STAGE=$STAGE \
+        DATABASE_DEBUG=$DATABASE_DEBUG \
+        NATIVE_LOGGER_TRACE=$NATIVE_LOGGER_TRACE \
+        DATABASE_USER=$DATABASE_USER \
+        DATABASE_PASSWORD=$DATABASE_PASSWORD \
+        DATABASE_HOST=$DATABASE_HOST \
+        DATABASE_PORT=$DATABASE_PORT \
+        DATABASE_NAME=$DATABASE_NAME \
+        DATABASE_MIGRATE=$DATABASE_MIGRATE \
+        BIRTHDAY_TITLE=$BIRTHDAY_TITLE \
+        BIRTHDAY_TEXT=$BIRTHDAY_TEXT \
+        NOTIFY_URL=$NOTIFY_URL \
+        NOTIFY_TOKEN=$NOTIFY_TOKEN
 
 artifacts:
   files:

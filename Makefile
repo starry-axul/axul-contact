@@ -16,6 +16,3 @@ local:
 
 build-file:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/$(dir)/bootstrap		cmd/$(dir)/main.go
-
-deploy:
-	sam deploy --no-confirm-changeset
