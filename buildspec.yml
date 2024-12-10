@@ -21,19 +21,19 @@ phases:
     - |
       sam deploy --no-confirm-changeset \
         --parameter-overrides \
-        "STAGE=${STAGE} \
-        DATABASE_DEBUG=${DATABASE_DEBUG} \
-        NATIVE_LOGGER_TRACE=${NATIVE_LOGGER_TRACE} \
-        DATABASE_USER=${DATABASE_USER} \
-        DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-        DATABASE_HOST=${DATABASE_HOST} \
-        DATABASE_PORT=${DATABASE_PORT} \
-        DATABASE_NAME=${DATABASE_NAME} \
-        DATABASE_MIGRATE=${DATABASE_MIGRATE} \
-        BIRTHDAY_TITLE=${BIRTHDAY_TITLE} \
-        BIRTHDAY_TEXT=${BIRTHDAY_TEXT} \
-        NOTIFY_URL=${NOTIFY_URL} \
-        NOTIFY_TOKEN=${NOTIFY_TOKEN}"
+        Stage=${STAGE:-dev} \
+        DatabaseDebug=${DATABASE_DEBUG:-false} \
+        NativeLoggerTrace=${NATIVE_LOGGER_TRACE:-0} \
+        DatabaseUser=${DATABASE_USER:-root} \
+        DatabasePassword=${DATABASE_PASSWORD:-root} \
+        DatabaseHost=${DATABASE_HOST:-localhost} \
+        DatabasePort=${DATABASE_PORT:-3306} \
+        DatabaseName=${DATABASE_NAME:-axul_contact} \
+        DatabaseMigrate=${DATABASE_MIGRATE:-true} \
+        BirthdayTitle="${BIRTHDAY_TITLE:-'Happy Birthday %s %s!'}" \
+        BirthdayText="${BIRTHDAY_TEXT:-'Today is %s %s\'s birthday!'}" \
+        NotifyUrl=${NOTIFY_URL:-http://localhost:8080} \
+        NotifyToken=${NOTIFY_TOKEN:-default-token}
 
 artifacts:
   files:
